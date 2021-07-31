@@ -1,24 +1,27 @@
 const express = require("express");
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
 const path = require("path");
 const {setupApi} = require("./api");
 const {setupDatabase, dropDatabase} = require("./db");
 const {redirectToHttps} = require("./util");
-
+require('dotenv').config();
 // Setup our database and API and express server
 const setupServer = async () => {
 
   // Clean start
-  //dropDatabase();
+  dropDatabase();
   
   // Setup our database
   const db = await setupDatabase();
 
   // Create our server
-  const app = express();
+  const app = await express();
 
   // Force HTTPs in production, but avoid needing a certificate for development
   if ( process.env.NODE_ENV === "production" ) {
-    redirectToHttps(app);
+    //redirectToHttps(app);
   }
 
   // Setup the API endpoints (see api/index.js)
@@ -33,7 +36,7 @@ const setupServer = async () => {
     port = process.env.PORT || 3000;
     app.use(express.static(path.join(__dirname, "../build")));
     app.get("*", (request, response) => {
-      response.sendFile(path.join(__dirname, "../build", "index.html"));
+      response.sendFile(path.join(__dirname, "../index.html"));
     });
   } else {
     port = 3001;
@@ -43,9 +46,27 @@ const setupServer = async () => {
     );
   }
 
+  // const privateKey  = fs.readFileSync('./ssl/privatekey.pem', 'utf8');
+  // const certificate = fs.readFileSync('./ssl/cert.pem', 'utf8');
+  // const chain = fs.readFileSync('./ssl/chain.pem', 'utf8');
+
+  // const credentials = {key: privateKey, cert: certificate, ca: chain};
+
+  const httpServer = http.createServer(app);
+  const httpsServer = https.createServer(app);
+
   // Start the listener!
   const listener = app.listen(port, () => {
     console.log("❇️ Express server is running on port", listener.address().port);
+  });
+
+  // Start the listener!
+  const listener2 = httpServer.listen(8080, () => {
+    console.log("❇️ Express server is running on port", 8080);
+  });
+
+  const listenerSecure = httpsServer.listen(8443, () => {
+    console.log("❇️ Express server is running on port", 8443);
   });
 }
 

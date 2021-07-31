@@ -3,9 +3,13 @@ const redirectToHttps = (app) => {
 
   // This method will be used below to force HTTPS on any requests
   function checkHttpsAndRedirectIfNeeded(request, response, next) {
+
+    const xforwardprotoCheck = request.get("X-Forwarded-Proto") != null && request.get("X").indexOf("https") != -1;
+    const protocolCheck = request.protocol === "https";
     // Check the protocol — if http, redirect to https.
-    if (request.get("X-Forwarded-Proto").indexOf("https") != -1) {
+    if (xforwardprotoCheck || protocolCheck) {
       return next();
+
     } else {
       response.redirect("https://" + request.hostname + request.url);
     }

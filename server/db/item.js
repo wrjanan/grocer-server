@@ -1,23 +1,23 @@
-const { sequelize } = require('./');
+const { sequelize } = require('.');
 const { DataTypes } = require('sequelize');
 
-const Badge = sequelize.define('Badges', {
+const Item = sequelize.define('Items', {
   // Model attributes are defined here
   id: {
     type: DataTypes.UUID,
     allowNull: false,
     primaryKey: true
   },
-  gameId: {
+  name: {
     type: DataTypes.STRING,
   },
-  gameHref: {
-    type: DataTypes.STRING,
+  quantity: {
+    type: DataTypes.NUMBER,
   },
   imageSrc: {
     type: DataTypes.STRING
   },
-  text: {
+  description: {
     type: DataTypes.STRING
   },
   createdAt: {
@@ -31,7 +31,7 @@ const Badge = sequelize.define('Badges', {
 });
 
 // `sequelize.define` also returns the model
-console.log(Badge === sequelize.models.Badge); // true
+console.log(Item === sequelize.models.Item); // true
 
 
-module.exports = { Badge };
+module.exports = { Item };
