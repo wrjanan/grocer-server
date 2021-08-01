@@ -5,6 +5,7 @@ const Item = sequelize.define('Items', {
   // Model attributes are defined here
   id: {
     type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     allowNull: false,
     primaryKey: true
   },

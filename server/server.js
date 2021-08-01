@@ -11,7 +11,7 @@ require('dotenv').config();
 const setupServer = async () => {
 
   // Clean start
-  dropDatabase();
+  // dropDatabase();
   
   // Setup our database
   const db = await setupDatabase();
@@ -33,7 +33,7 @@ const setupServer = async () => {
   // https://dev.to/glitch/create-react-app-and-express-together-on-glitch-28gi
   let port;
   if (process.env.NODE_ENV === "production") {
-    port = process.env.PORT || 3000;
+    port = process.env.PORT || 3001;
     app.use(express.static(path.join(__dirname, "../build")));
     app.get("*", (request, response) => {
       response.sendFile(path.join(__dirname, "../index.html"));

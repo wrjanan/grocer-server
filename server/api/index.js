@@ -8,6 +8,7 @@ const setupApi = (app, db) => {
   app.use(function(req, res, next) {
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "*");
+      res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
 
       next();
   });
@@ -42,6 +43,23 @@ const setupApi = (app, db) => {
     response.json(item);
   });
   app.post("/api/item", async (request, response) => {
+      const { item } = request.body;
+      await Item.create(item);
+      response.status(200);
+      response.json(item);
+  });
+  app.put("/api/item", async (request, response) => {
+      const { item } = request.body;
+      await Item.update(item, { where : { id : item.id } } );
+      response.status(200);
+      response.json(item);
+  });
+  app.delete("/api/item/", async (request, response) => {
+      const { id } = request.query;
+      const row = await Item.destroy({ where: { id } });
+      response.sendStatus(200);
+  });
+  app.post("/api/items", async (request, response) => {
       const { items } = request.body;
       await Item.bulkCreate(items, { returning: false });
       response.status(200);
