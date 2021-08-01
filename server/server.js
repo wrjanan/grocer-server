@@ -34,9 +34,9 @@ const setupServer = async () => {
   let port;
   if (process.env.NODE_ENV === "production") {
     port = process.env.PORT || 3001;
-    app.use(express.static(path.join(__dirname, "../build")));
+    app.use(express.static(path.join(__dirname, "../public")));
     app.get("*", (request, response) => {
-      response.sendFile(path.join(__dirname, "../index.html"));
+      response.sendFile(path.join(__dirname, "../public/index.html"));
     });
   } else {
     port = 3001;
